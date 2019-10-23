@@ -35,6 +35,7 @@ my %feature = (
     unicode_strings => 'unicode',
     fc              => 'fc',
     signatures      => 'signatures',
+    isa             => 'isa',
 );
 
 # NOTE: If a feature is ever enabled in a non-contiguous range of Perl
@@ -382,7 +383,7 @@ read_only_bottom_close_and_rename($h);
 __END__
 package feature;
 
-our $VERSION = '1.55';
+our $VERSION = '1.56';
 
 FEATURES
 

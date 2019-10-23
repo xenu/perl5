@@ -8440,6 +8440,9 @@ yyl_try(pTHX_ char initial_state, char *s, STRLEN len,
 	    pl_yylval.ival = CopLINE(PL_curcop);
 	    OPERATOR(IF);
 
+        case KEY_isa:
+            Rop(OP_ISA);
+
 	case KEY_index:
 	    LOP(OP_INDEX,XTERM);
 
