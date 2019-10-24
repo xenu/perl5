@@ -8441,6 +8441,8 @@ yyl_try(pTHX_ char initial_state, char *s, STRLEN len,
 	    OPERATOR(IF);
 
         case KEY_isa:
+            Perl_ck_warner_d(aTHX_
+                packWARN(WARN_EXPERIMENTAL__ISA), "isa is experimental");
             Rop(OP_ISA);
 
 	case KEY_index:
