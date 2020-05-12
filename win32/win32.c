@@ -3957,16 +3957,74 @@ win32_isatty(int fd)
     return 0;
 }
 
+static int
+win32_sock_dup(SOCKET in, SOCKET *out)
+{
+    WSAPROTOCOL_INFOA info;
+    int ret = WSADuplicateSocketA(in, GetCurrentProcessId(), &info);
+    if (ret) {
+        if (WSAGetLastError() == WSAENOTSOCK)
+            return -2;
+
+        return -1;
+    }
+
+    *out = WSASocketA(
+        FROM_PROTOCOL_INFO, FROM_PROTOCOL_INFO, FROM_PROTOCOL_INFO, &info, 0, 0
+    );
+
+    if (*out == INVALID_SOCKET) {
+        return -1;
+    }
+
+    return 0;
+}
+
 DllExport int
 win32_dup(int fd)
 {
-    return dup(fd);
+    int err;
+    SOCKET new_sock;
+    HANDLE h = (HANDLE)_get_osfhandle(fd);
+
+    if (h == INVALID_HANDLE_VALUE)
+        return -1;
+
+    err = win32_sock_dup((SOCKET)h, &new_sock);
+    if (!err)
+        return _open_osfhandle((intptr_t)new_sock, O_RDWR|O_BINARY);
+    else if (err == -2)
+        return dup(fd);
+
+    return -1;
 }
 
 DllExport int
 win32_dup2(int fd1,int fd2)
 {
-    return dup2(fd1,fd2);
+    int err;
+    SOCKET new_sock;
+    HANDLE h = (HANDLE)_get_osfhandle(fd1);
+
+    if (h == INVALID_HANDLE_VALUE) {
+        return -1;
+    }
+
+    err = win32_sock_dup((SOCKET)h, &new_sock);
+    if (!err) {
+        HANDLE h2 = (HANDLE)_get_osfhandle(fd2);
+
+        if (closesocket((SOCKET)h2))
+            CloseHandle(h2);
+
+        _set_osfhnd(fd2, new_sock);
+        return 0;
+    }
+    else if (err == -2) {
+        return dup2(fd1, fd2);
+    }
+
+    return -1;
 }
 
 static int

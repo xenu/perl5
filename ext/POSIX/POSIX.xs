@@ -3062,7 +3062,7 @@ dup2(fd1, fd2)
                actually implemented the well known documented POSIX
                behaviour for a POSIX API.
                http://msdn.microsoft.com/en-us/library/8syseb29.aspx  */
-            RETVAL = dup2(fd1, fd2) == -1 ? -1 : fd2;
+            RETVAL = win32_dup2(fd1, fd2) == -1 ? -1 : fd2;
 #else
             RETVAL = dup2(fd1, fd2);
 #endif
