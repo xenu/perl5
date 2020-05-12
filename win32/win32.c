@@ -4570,10 +4570,19 @@ Perl_win32_init(int *argcp, char ***argvp)
      * like MessageBox() can fail under some versions of Windows XP.
      */
     InitCommonControls();
-
+   
     g_osver.dwOSVersionInfoSize = sizeof(g_osver);
     GetVersionEx(&g_osver);
 
+#ifndef WIN32_NO_SOCKETS
+    {
+        WSADATA retdata;
+        int ret;
+        if(ret = WSAStartup(MAKEWORD(2, 2), &retdata))
+            Perl_croak_nocontext("Unable to locate winsock library!\n");
+    }
+#endif
+    
 #ifdef WIN32_DYN_IOINFO_SIZE
     {
 	Size_t ioinfo_size = _msize((void*)__pioinfo[0]);;

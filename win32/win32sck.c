@@ -329,21 +329,6 @@ convert_errno_to_wsa_error(int err)
 void
 start_sockets(void) 
 {
-    unsigned short version;
-    WSADATA retdata;
-    int ret;
-
-    /*
-     * initalize the winsock interface and insure that it is
-     * cleaned up at exit.
-     */
-    version = 0x2;
-    if(ret = WSAStartup(version, &retdata))
-	Perl_croak_nocontext("Unable to locate winsock library!\n");
-    if(retdata.wVersion != version)
-	Perl_croak_nocontext("Could not find version 2.0 of winsock dll\n");
-
-    /* atexit((void (*)(void)) EndSockets); */
     wsock_started = 1;
 }
 
