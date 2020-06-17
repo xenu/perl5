@@ -4014,14 +4014,13 @@ win32_dup2(int fd1,int fd2)
     if (!err) {
         HANDLE h2 = (HANDLE)_get_osfhandle(fd2);
         if (h2 != INVALID_HANDLE_VALUE) {
-            if (closesocket((SOCKET)h2))
-                CloseHandle(h2);
+            my_close(fd2);
         }
         else {
             int foo = open("nul", _O_RDONLY);
             dup2(foo,fd2);
             close(foo);
-            CloseHandle(_get_osf_handle(fd2));
+            CloseHandle(_get_osfhandle(fd2));
         }
 
         _set_osfhnd(fd2, new_sock);
