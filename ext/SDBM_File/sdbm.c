@@ -23,6 +23,7 @@
 #endif
 
 #include <string.h>
+#include <stdlib.h>
 
 /*
  * externals
@@ -30,16 +31,6 @@
 
 #include <errno.h> /* See notes in perl.h about avoiding
 			extern int errno; */
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-extern Malloc_t malloc(MEM_SIZE);
-extern Free_t free(Malloc_t);
-
-#ifdef __cplusplus
-}
-#endif
 
 const datum nullitem = {0, 0};
 
