@@ -354,7 +354,7 @@ Safe version of system's free()
 =cut
 */
 
-Free_t
+void
 Perl_safesysfree(Malloc_t where)
 {
 #ifdef ALWAYS_NEED_THX
@@ -544,7 +544,7 @@ Malloc_t Perl_realloc (Malloc_t where, MEM_SIZE nbytes)
     return (Malloc_t)PerlMem_realloc(where, nbytes);
 }
 
-Free_t   Perl_mfree (Malloc_t where)
+void   Perl_mfree (Malloc_t where)
 {
 #ifdef PERL_IMPLICIT_SYS
     dTHX;

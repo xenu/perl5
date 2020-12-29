@@ -2203,15 +2203,10 @@ sed <<!GROK!THIS! >$CONFIG_H -e 's!^#undef\(.*/\)\*!/\*#define\1 \*!' -e 's!^#un
 #$i_termios I_TERMIOS		/**/
 #$i_sgtty I_SGTTY		/**/
 
-/* Free_t:
- *	This variable contains the return type of free().  It is usually
- *	void, but occasionally int.
- */
 /* Malloc_t:
  *	This symbol is the type of pointer returned by malloc and realloc.
  */
 #define Malloc_t $malloctype			/**/
-#define Free_t $freetype			/**/
 
 /* PERL_MALLOC_WRAP:
  *	This symbol, if defined, indicates that we'd like malloc wrap checks.

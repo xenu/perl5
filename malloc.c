@@ -1796,7 +1796,7 @@ morecore(int bucket)
 #endif /* !PACK_MALLOC */
 }
 
-Free_t
+void
 Perl_mfree(Malloc_t where)
 {
   	MEM_SIZE size;

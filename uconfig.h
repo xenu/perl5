@@ -2168,15 +2168,10 @@
 /*#define I_TERMIOS		/ **/
 /*#define I_SGTTY		/ **/
 
-/* Free_t:
- *	This variable contains the return type of free().  It is usually
- *	void, but occasionally int.
- */
 /* Malloc_t:
  *	This symbol is the type of pointer returned by malloc and realloc.
  */
 #define Malloc_t void *			/**/
-#define Free_t void			/**/
 
 /* PERL_MALLOC_WRAP:
  *	This symbol, if defined, indicates that we'd like malloc wrap checks.
@@ -5282,6 +5277,6 @@
 #endif
 
 /* Generated from:
- * 53ec858c462f9fa2669095834b3d350458c955777a07a0ad7a3a73162ff8ef0e config_h.SH
- * b53784d20c0f250807f47a3130cdc8e01a92da948e6747af87ebc24f11904722 uconfig.sh
+ * 3a148d03b31363c84750fb085473baea97962117f8de54d6f9c8816941da5a2f config_h.SH
+ * b3d6f97c17a54062dfcbd48c0bbe05df5685d66685017c0852db9e1ea6504ca0 uconfig.sh
  * ex: set ro: */

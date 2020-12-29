@@ -1143,7 +1143,6 @@ lseeksize=''
 lseektype=''
 make_set_make=''
 d_mymalloc=''
-freetype=''
 mallocobj=''
 mallocsrc=''
 malloctype=''
@@ -7813,7 +7812,7 @@ y*|true)
 	;;
 esac
 
-: compute the return types of malloc and free
+: compute the return type of malloc
 echo " "
 $cat >malloc.c <<END
 #$i_malloc I_MALLOC
@@ -7829,9 +7828,6 @@ $cat >malloc.c <<END
 #ifdef TRY_MALLOC
 void *malloc();
 #endif
-#ifdef TRY_FREE
-void free();
-#endif
 END
 case "$malloctype" in
 '')
@@ -7844,16 +7840,6 @@ case "$malloctype" in
 esac
 echo "Your system wants malloc to return '$malloctype', it would seem." >&4
 
-case "$freetype" in
-'')
-	if $cc $ccflags -c -DTRY_FREE malloc.c >/dev/null 2>&1; then
-		freetype='void'
-	else
-		freetype='int'
-	fi
-	;;
-esac
-echo "Your system uses $freetype free(), it would seem." >&4
 $rm -f malloc.[co]
 : determine where site specific architecture-dependent libraries go.
 : sitelib  default is /usr/local/lib/perl5/site_perl/$version
@@ -24788,7 +24774,6 @@ firstmakefile='$firstmakefile'
 flex='$flex'
 fpossize='$fpossize'
 fpostype='$fpostype'
-freetype='$freetype'
 from='$from'
 full_ar='$full_ar'
 full_csh='$full_csh'

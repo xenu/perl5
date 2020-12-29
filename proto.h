@@ -2025,7 +2025,7 @@ PERL_CALLCONV SV*	Perl_mess(pTHX_ const char* pat, ...)
 PERL_CALLCONV SV*	Perl_mess_sv(pTHX_ SV* basemsg, bool consume);
 #define PERL_ARGS_ASSERT_MESS_SV	\
 	assert(basemsg)
-PERL_CALLCONV Free_t	Perl_mfree(Malloc_t where);
+PERL_CALLCONV void	Perl_mfree(Malloc_t where);
 #define PERL_ARGS_ASSERT_MFREE
 PERL_CALLCONV int	Perl_mg_clear(pTHX_ SV* sv);
 #define PERL_ARGS_ASSERT_MG_CLEAR	\
@@ -2944,7 +2944,7 @@ PERL_CALLCONV Malloc_t	Perl_safesyscalloc(MEM_SIZE elements, MEM_SIZE size)
 			__attribute__warn_unused_result__;
 #define PERL_ARGS_ASSERT_SAFESYSCALLOC
 
-PERL_CALLCONV Free_t	Perl_safesysfree(Malloc_t where);
+PERL_CALLCONV void	Perl_safesysfree(Malloc_t where);
 #define PERL_ARGS_ASSERT_SAFESYSFREE
 PERL_CALLCONV Malloc_t	Perl_safesysmalloc(MEM_SIZE nbytes)
 			__attribute__malloc__

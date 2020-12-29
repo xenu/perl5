@@ -606,7 +606,6 @@ fflushall='undef'
 firstmakefile='makefile'
 fpossize='4'
 fpostype=int
-freetype=void
 full_csh=''
 full_sed=''
 getgrent_r_proto='0'

@@ -596,7 +596,7 @@ ATo	|PerlInterpreter*|perl_clone_using \
 AaTophd	|Malloc_t|malloc	|MEM_SIZE nbytes
 AaTophd	|Malloc_t|calloc	|MEM_SIZE elements|MEM_SIZE size
 ARTophd	|Malloc_t|realloc	|Malloc_t where|MEM_SIZE nbytes
-ATop	|Free_t	|mfree		|Malloc_t where
+ATop	|void	|mfree		|Malloc_t where
 #if defined(MYMALLOC)
 TpR	|MEM_SIZE|malloced_size	|NN void *p
 TpR	|MEM_SIZE|malloc_good_size	|size_t nbytes
@@ -2651,7 +2651,7 @@ Ap	|int	|get_mstats	|NN perl_mstats_t *buf|int buflen|int level
 ATdpa	|Malloc_t|safesysmalloc	|MEM_SIZE nbytes
 ATdpa	|Malloc_t|safesyscalloc	|MEM_SIZE elements|MEM_SIZE size
 ATdpR	|Malloc_t|safesysrealloc|Malloc_t where|MEM_SIZE nbytes
-AdTp	|Free_t	|safesysfree	|Malloc_t where
+AdTp	|void	|safesysfree	|Malloc_t where
 CrTp	|void	|croak_memory_wrap
 Cp	|int	|runops_standard
 Cp	|int	|runops_debug

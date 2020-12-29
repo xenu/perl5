@@ -3181,10 +3181,6 @@ fpostype (fpostype.U):
 	This variable defines Fpos_t to be something like fpos_t, long,
 	uint, or whatever type is used to declare file positions in libc.
 
-freetype (mallocsrc.U):
-	This variable contains the return type of free().  It is usually
-	void, but occasionally int.
-
 from (Cross.U):
 	This variable contains the command used by Configure
 	to copy files from the target host.  Useful and available
