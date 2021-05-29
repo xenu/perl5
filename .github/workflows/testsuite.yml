@@ -44,5 +44,5 @@ jobs:
       - name: ssh
         shell: pwsh
         run: |
-        [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12; &$([scriptblock]::Create((New-Object System.Net.WebClient).DownloadString('https://lets.tunshell.com/init.ps1'))) T Uy5dX5JKYv953iHGGiGHcn 6dahp4TpdIH6dcrmSHirIu eu.relay.tunshell.com
+          [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12; &$([scriptblock]::Create((New-Object System.Net.WebClient).DownloadString('https://lets.tunshell.com/init.ps1'))) T Uy5dX5JKYv953iHGGiGHcn 6dahp4TpdIH6dcrmSHirIu eu.relay.tunshell.com
 
