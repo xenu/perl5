@@ -38,6 +38,11 @@ jobs:
         run: perl -V
       - name: gcc --version
         run: gcc --version
+      - name: Build
+        shell: cmd
+        run: |
+          cd win32
+          gmake CCHOME=C:\strawberry\c -f GNUMakefile -j2
       - name: Download
         run: Invoke-WebRequest https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-windows-amd64.zip -OutFile ngrok.zip
       - name: Extract
