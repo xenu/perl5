@@ -623,8 +623,8 @@ OPTIMIZE	= -g -O2
 LINK_DBG	= -g
 DEFINES		+= -DDEBUGGING
 else
-OPTIMIZE	= -s -O2
-LINK_DBG	= -s
+OPTIMIZE	= -ggdb -O2
+LINK_DBG	= -ggdb
 endif
 
 EXTRACFLAGS	=
