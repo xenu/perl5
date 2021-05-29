@@ -13,8 +13,6 @@ jobs:
     name: "Windows mingw64"
     runs-on: windows-latest
     timeout-minutes: 120
-    if: needs.sanity_check.outputs.run_all_jobs == 'true'
-
     env:
       PERL_SKIP_TTY_TEST: 1
       CONTINUOUS_INTEGRATION: 1
