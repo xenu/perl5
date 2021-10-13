@@ -570,6 +570,8 @@ jobs:
           ASAN_OPTIONS=detect_leaks=0 ./perl -Ilib -V
           ASAN_OPTIONS=detect_leaks=0 ./perl -Ilib -e 'use Config; print Config::config_sh'
       - name: Run Tests
+        env:
+          LSAN_OPTIONS: verbosity=1:log_threads=1
         run: |
           PERL_DESTRUCT_LEVEL=2 TEST_JOBS=2 ./perl t/harness
 
