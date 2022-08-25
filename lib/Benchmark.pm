@@ -53,9 +53,6 @@ Benchmark - benchmark running times of Perl code
     $count = $t->iters ;
     print "$count loops of other code took:",timestr($t),"\n";
 
-    # enable hires wallclock timing if possible
-    use Benchmark ':hireswallclock';
-
 =head1 DESCRIPTION
 
 The Benchmark module encapsulates a number of routines to help you
@@ -473,6 +470,7 @@ sub _doeval { no strict;  eval shift }
 
 use Carp;
 use Exporter;
+use Time::HiRes;
 
 our(@ISA, @EXPORT, @EXPORT_OK, %EXPORT_TAGS, $VERSION);
 
@@ -484,30 +482,9 @@ our(@ISA, @EXPORT, @EXPORT_OK, %EXPORT_TAGS, $VERSION);
 
 $VERSION = 1.23;
 
-# --- ':hireswallclock' special handling
-
-my $hirestime;
-
-sub mytime () { time }
+sub mytime () { Time::HiRes::time() }
 
 init();
-
-sub BEGIN {
-    if (eval 'require Time::HiRes') {
-	import Time::HiRes qw(time);
-	$hirestime = \&Time::HiRes::time;
-    }
-}
-
-sub import {
-    my $class = shift;
-    if (grep { $_ eq ":hireswallclock" } @_) {
-	@_ = grep { $_ ne ":hireswallclock" } @_;
-	local $^W=0;
-	*mytime = $hirestime if defined $hirestime;
-    }
-    Benchmark->export_to_level(1, $class, @_);
-}
 
 our($Debug, $Min_Count, $Min_CPU, $Default_Format, $Default_Style,
     %_Usage, %Cache, $Do_Cache);
@@ -651,7 +628,7 @@ sub timestr {
     return '' if $style eq 'none';
     $style = ($ct>0) ? 'all' : 'noc' if $style eq 'auto';
     my $s = "@t $style"; # default for unknown style
-    my $w = $hirestime ? "%2g" : "%2d";
+    my $w = "%2g";
     $s = sprintf("$w wallclock secs (%$f usr %$f sys + %$f cusr %$f csys = %$f CPU)",
 			    $r,$pu,$ps,$cu,$cs,$tt) if $style eq 'all';
     $s = sprintf("$w wallclock secs (%$f usr + %$f sys = %$f CPU)",
