@@ -306,26 +306,7 @@ else {
     $opt{nvgformat} = '"g"';
 }
 
-# change some configuration variables based on compiler version
-if ($opt{cc} =~ /\bcl/ and $opt{ccversion} =~ /^(\d+)/) {
-    my $ccversion = $1;
-    if ($ccversion >= 19) { # VC14+
-	$opt{stdio_base} = 'PERLIO_FILE_base(fp)';
-	$opt{stdio_bufsiz} = '(PERLIO_FILE_cnt(fp) + PERLIO_FILE_ptr(fp) - PERLIO_FILE_base(fp))';
-	$opt{stdio_cnt} = 'PERLIO_FILE_cnt(fp)';
-	$opt{stdio_ptr} = 'PERLIO_FILE_ptr(fp)';
-    }
-}
-# find out which MSVC this ICC is using
-elsif ($opt{cc} =~ /\bicl/) {
-    my $output = `cl 2>&1`;
-    my $num_ver = $output =~ /\b(\d+(?:\.\d+)+)\b/ ? $1 : '?';
-    if ($num_ver =~ /^(\d+)/ && $1 >= 19) { # VC14+
-	$opt{stdio_base} = 'PERLIO_FILE_base(fp)';
-	$opt{stdio_bufsiz} = '(PERLIO_FILE_cnt(fp) + PERLIO_FILE_ptr(fp) - PERLIO_FILE_base(fp))';
-	$opt{stdio_cnt} = 'PERLIO_FILE_cnt(fp)';
-	$opt{stdio_ptr} = 'PERLIO_FILE_ptr(fp)';
-    }
+if ($opt{cc} =~ /\bicl/) {
     $opt{ar} ='xilib';
 }
 

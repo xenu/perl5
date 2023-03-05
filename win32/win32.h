@@ -296,53 +296,9 @@ EXTERN_C char *gets(char* buffer);
 
 #define tzname _tzname
 
-/* From corecrt_internal_stdio.h: */
-typedef struct
-{
-    union
-    {
-        FILE  _public_file;
-        char* _ptr;
-    };
-
-    char*            _base;
-    int              _cnt;
-    long             _flags;
-    long             _file;
-    int              _charbuf;
-    int              _bufsiz;
-    char*            _tmpfname;
-    CRITICAL_SECTION _lock;
-} __crt_stdio_stream_data;
-
-#define PERLIO_FILE_flag_RD 0x0001 /* _IOREAD   */
-#define PERLIO_FILE_flag_WR 0x0002 /* _IOWRITE  */
-#define PERLIO_FILE_flag_RW 0x0004 /* _IOUPDATE */
-#define PERLIO_FILE_ptr(f)  (((__crt_stdio_stream_data*)(f))->_ptr)
-#define PERLIO_FILE_base(f) (((__crt_stdio_stream_data*)(f))->_base)
-#define PERLIO_FILE_cnt(f)  (((__crt_stdio_stream_data*)(f))->_cnt)
-#define PERLIO_FILE_flag(f) ((int)(((__crt_stdio_stream_data*)(f))->_flags))
-#define PERLIO_FILE_file(f) (*(int*)(&((__crt_stdio_stream_data*)(f))->_file))
-
 #endif
 
 #endif /* _MSC_VER */
-
-#if (!defined(_MSC_VER)) || (defined(_MSC_VER) && _MSC_VER < 1900)
-
-/* Note: PERLIO_FILE_ptr/base/cnt are not actually used for GCC or <VS2015
- * since FILE_ptr/base/cnt do the same thing anyway but it doesn't hurt to
- * define them all here for completeness. */
-#define PERLIO_FILE_flag_RD _IOREAD /* 0x001 */
-#define PERLIO_FILE_flag_WR _IOWRT  /* 0x002 */
-#define PERLIO_FILE_flag_RW _IORW   /* 0x080 */
-#define PERLIO_FILE_ptr(f)  ((f)->_ptr)
-#define PERLIO_FILE_base(f) ((f)->_base)
-#define PERLIO_FILE_cnt(f)  ((f)->_cnt)
-#define PERLIO_FILE_flag(f) ((f)->_flag)
-#define PERLIO_FILE_file(f) ((f)->_file)
-
-#endif
 
 #ifdef __MINGW32__		/* Minimal Gnu-Win32 */
 
