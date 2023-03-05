@@ -9,7 +9,7 @@
 
 /* Package name      : perl5
  * Source directory  : 
- * Configuration time: Sun Mar  5 06:00:09 2023
+ * Configuration time: Sun Mar  5 06:16:30 2023
  * Configured by     : xenu
  * Target system     : 
  */
@@ -3768,13 +3768,13 @@
  *	This symbol, if defined, indicates that <stdbool.h> exists and
  *	can be included.
  */
-/*#define	I_STDBOOL		/ **/
+#define	I_STDBOOL		/**/
 
 /* I_STDINT:
  *	This symbol, if defined, indicates that <stdint.h> exists and
  *	should be included.
  */
-/*#define I_STDINT		/ **/
+#define I_STDINT		/**/
 
 /* I_SUNMATH:
  *	This symbol, if defined, indicates that <sunmath.h> exists and

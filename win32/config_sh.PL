@@ -62,12 +62,6 @@ sub loadopts {
     }
 }
 
-my $prebuilt; # are we making the prebuilt config used to bootstrap?
-if (@ARGV && $ARGV[0] eq '--prebuilt') {
-    ++$prebuilt;
-    shift;
-}
-
 my %opt;
 
 my $optref = loadopts();
@@ -315,38 +309,22 @@ else {
 # change some configuration variables based on compiler version
 if ($opt{cc} =~ /\bcl/ and $opt{ccversion} =~ /^(\d+)/) {
     my $ccversion = $1;
-    if ($ccversion >= 14) { # VC8+
-	$opt{sGMTIME_max} = 32535291599;
-	$opt{sLOCALTIME_max} = 32535244799;
-    }
-    if ($ccversion >= 16 && !$prebuilt) { # VC10+
-	$opt{i_stdint} = 'define';
-    }
     if ($ccversion >= 19) { # VC14+
 	$opt{stdio_base} = 'PERLIO_FILE_base(fp)';
 	$opt{stdio_bufsiz} = '(PERLIO_FILE_cnt(fp) + PERLIO_FILE_ptr(fp) - PERLIO_FILE_base(fp))';
 	$opt{stdio_cnt} = 'PERLIO_FILE_cnt(fp)';
 	$opt{stdio_ptr} = 'PERLIO_FILE_ptr(fp)';
-	$opt{i_stdbool} = 'define' unless $prebuilt;
     }
 }
 # find out which MSVC this ICC is using
 elsif ($opt{cc} =~ /\bicl/) {
     my $output = `cl 2>&1`;
     my $num_ver = $output =~ /\b(\d+(?:\.\d+)+)\b/ ? $1 : '?';
-    if ($num_ver =~ /^(\d+)/ && $1 >= 14) { # VC8+
-	$opt{sGMTIME_max} = 32535291599;
-	$opt{sLOCALTIME_max} = 32535244799;
-    }
-    if ($num_ver =~ /^(\d+)/ && $1 >= 16) { # VC10+
-	$opt{i_stdint} = 'define';
-    }
     if ($num_ver =~ /^(\d+)/ && $1 >= 19) { # VC14+
 	$opt{stdio_base} = 'PERLIO_FILE_base(fp)';
 	$opt{stdio_bufsiz} = '(PERLIO_FILE_cnt(fp) + PERLIO_FILE_ptr(fp) - PERLIO_FILE_base(fp))';
 	$opt{stdio_cnt} = 'PERLIO_FILE_cnt(fp)';
 	$opt{stdio_ptr} = 'PERLIO_FILE_ptr(fp)';
-	$opt{i_stdbool} = 'define';
     }
     $opt{ar} ='xilib';
 }
