@@ -20,7 +20,7 @@ if ($codepage !~ /\A(?:System|Local|UTF-8)\z/) {
 }
 
 say <<~'EOF';
-  <?xml version="1.0" codepage="UTF-8" standalone="yes"?>
+  <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
   <assembly xmlns="urn:schemas-microsoft-com:asm.v1" manifestVersion="1.0" xmlns:asmv3="urn:schemas-microsoft-com:asm.v3">
     <assemblyIdentity version="0.0.0.0" name="Perl" type="Win32" />
     <description>Perl</description>
@@ -57,7 +57,7 @@ if ($codepage ne 'System') {
     say <<~"EOF";
         <asmv3:application>
           <asmv3:windowsSettings xmlns="http://schemas.microsoft.com/SMI/2019/WindowsSettings">
-          <activeCodePage>${codepage}</activeCodePage>
+            <activeCodePage>${codepage}</activeCodePage>
           </asmv3:windowsSettings>
         </asmv3:application>
       EOF
