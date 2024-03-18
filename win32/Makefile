@@ -185,6 +185,11 @@ DEFAULT_INC_EXCLUDES_DOT = define
 #ALL_STATIC	= define
 
 #
+# Valid values are "System", "Local", "UTF-8"
+#
+CODEPAGE        = System
+
+#
 # set the install location of the compiler
 # Running VCVARS32.BAT, VCVARSALL.BAT or similar is *required* when using
 # Visual C++.
@@ -1048,6 +1053,9 @@ $(PERLSTATICLIB): Extensions_static
 		$(PERLDLL_OBJ)
 <<
 	$(XCOPY) $(PERLSTATICLIB) $(COREDIR)
+
+$(PERLEXE_MANIFEST): $(MINIPERL) generate_manifest.pl
+	$(MINIPERL) generate_manifest.pl --codepage $(PERL_CODEPAGE) > $(PERLEXE_MANIFEST)
 
 $(PERLEXE_RES): perlexe.rc $(PERLEXE_MANIFEST) $(PERLEXE_ICO)
 
