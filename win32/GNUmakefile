@@ -1503,7 +1503,7 @@ endif
 	$(XCOPY) $(PERLSTATICLIB) $(COREDIR)
 
 $(PERLEXE_MANIFEST): $(MINIPERL) generate_manifest.pl
-        $(MINIPERL) -I ..\lib generate_manifest.pl --codepage $(CODEPAGE) > $(PERLEXE_MANIFEST)
+	$(MINIPERL) -I ..\lib generate_manifest.pl --codepage $(CODEPAGE) > $(PERLEXE_MANIFEST)
 
 $(PERLEXE_RES): perlexe.rc $(PERLEXE_MANIFEST) $(PERLEXE_ICO)
 
