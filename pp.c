@@ -1335,23 +1335,12 @@ PP(pp_multiply)
         U32 flags = (svl->sv_flags & svr->sv_flags);
         if (flags & SVf_IOK) {
             /* both args are simple IVs */
-            UV topl, topr;
             il = SvIVX(svl);
             ir = SvIVX(svr);
           do_iv:
-            topl = ((UV)il) >> (UVSIZE * 4 - 1);
-            topr = ((UV)ir) >> (UVSIZE * 4 - 1);
-
-            /* if both are in a range that can't under/overflow, do a
-             * simple integer multiply: if the top halves(*) of both numbers
-             * are 00...00  or 11...11, then it's safe.
-             * (*) for 32-bits, the "top half" is the top 17 bits,
-             *     for 64-bits, its 33 bits */
-            if (!(
-                      ((topl+1) | (topr+1))
-                    & ( (((UV)1) << (UVSIZE * 4 + 1)) - 2) /* 11..110 */
-            )) {
-                TARGi(il * ir, 0); /* args not GMG, so can't be tainted */
+            IV result;
+            if (!__builtin_mul_overflow(il, ir, &result)) {
+                TARGi(result, 0); /* args not GMG, so can't be tainted */
                 goto ret;
             }
             goto generic;
