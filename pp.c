@@ -1376,99 +1376,61 @@ PP(pp_multiply)
         if (SvIV_please_nomg(svl)) {
             bool auvok = SvUOK(svl);
             bool buvok = SvUOK(svr);
-            const UV topmask = (~ (UV)0) << (4 * sizeof (UV));
-            const UV botmask = ~((~ (UV)0) << (4 * sizeof (UV)));
-            UV alow;
-            UV ahigh;
-            UV blow;
-            UV bhigh;
 
-            if (auvok) {
-                alow = SvUVX(svl);
-            } else {
-                const IV aiv = SvIVX(svl);
-                if (aiv >= 0) {
-                    alow = aiv;
-                    auvok = TRUE; /* effectively it's a UV now */
-                } else {
-                    /* abs, auvok == false records sign */
-                    alow = NEGATE_2UV(aiv);
+            if (!auvok && !buvok) {
+                /* two IV operands */
+                IV aiv = SvIVx(svl);
+                IV biv = SvIVx(svr);
+                UV result;
+
+                IV iv_result;
+                if (!__builtin_mul_overflow(aiv, biv, &iv_result)) {
+                   TARGi(iv_result, 1);
+                   goto ret;
+                }
+
+                UV uv_result;
+                if (!__builtin_mul_overflow(aiv, biv, &uv_result)) {
+                    TARGu(uv_result, 1);
+                    goto ret;
                 }
             }
-            if (buvok) {
-                blow = SvUVX(svr);
-            } else {
-                const IV biv = SvIVX(svr);
-                if (biv >= 0) {
-                    blow = biv;
-                    buvok = TRUE; /* effectively it's a UV now */
-                } else {
-                    /* abs, buvok == false records sign */
-                    blow = NEGATE_2UV(biv);
+            else if (auvok && buvok) {
+                /* two UV operands */
+                UV auv = SvUVx(svl);
+                UV buv = SvUVx(svr);
+
+                IV iv_result;
+                if (!__builtin_mul_overflow(auv, buv, &iv_result)) {
+                   TARGi(iv_result, 1);
+                   goto ret;
+                }
+
+                UV uv_result;
+                if (!__builtin_mul_overflow(auv, buv, &uv_result)) {
+                    TARGu(uv_result, 1);
+                    goto ret;
                 }
             }
+            else {
+                /* one operand is UV, the other is IV */
+                UV auv = auvok ? SvUVX(svl) : SvUVX(svr);
+                IV biv = auvok ? SvIVX(svr) : SvIVX(svl);
 
-            /* If this does sign extension on unsigned it's time for plan B  */
-            ahigh = alow >> (4 * sizeof (UV));
-            alow &= botmask;
-            bhigh = blow >> (4 * sizeof (UV));
-            blow &= botmask;
-            if (ahigh && bhigh) {
-                NOOP;
-                /* eg 32 bit is at least 0x10000 * 0x10000 == 0x100000000
-                   which is overflow. Drop to NVs below.  */
-            } else if (!ahigh && !bhigh) {
-                /* eg 32 bit is at most 0xFFFF * 0xFFFF == 0xFFFE0001
-                   so the unsigned multiply cannot overflow.  */
-                const UV product = alow * blow;
-                if (auvok == buvok) {
-                    /* -ve * -ve or +ve * +ve gives a +ve result.  */
-                    TARGu(product, 1);
+                IV iv_result;
+                if (!__builtin_mul_overflow(auv, biv, &iv_result)) {
+                    TARGi(iv_result, 1);
                     goto ret;
-                } else if (product <= ABS_IV_MIN) {
-                    /* -ve result, which could overflow an IV  */
-                    TARGi(NEGATE_2IV(product), 1);
-                    goto ret;
-                } /* else drop to NVs below. */
-            } else {
-                /* One operand is large, 1 small */
-                UV product_middle;
-                if (bhigh) {
-                    /* swap the operands */
-                    ahigh = bhigh;
-                    bhigh = blow; /* bhigh now the temp var for the swap */
-                    blow = alow;
-                    alow = bhigh;
                 }
-                /* now, ((ahigh * blow) << half_UV_len) + (alow * blow)
-                   multiplies can't overflow. shift can, add can, -ve can.  */
-                product_middle = ahigh * blow;
-                if (!(product_middle & topmask)) {
-                    /* OK, (ahigh * blow) won't lose bits when we shift it.  */
-                    UV product_low;
-                    product_middle <<= (4 * sizeof (UV));
-                    product_low = alow * blow;
 
-                    /* as for pp_add, UV + something mustn't get smaller.
-                       IIRC ANSI mandates this wrapping *behaviour* for
-                       unsigned whatever the actual representation*/
-                    product_low += product_middle;
-                    if (product_low >= product_middle) {
-                        /* didn't overflow */
-                        if (auvok == buvok) {
-                            /* -ve * -ve or +ve * +ve gives a +ve result.  */
-                            TARGu(product_low, 1);
-                            goto ret;
-                        } else if (product_low <= ABS_IV_MIN) {
-                            /* -ve result, which could overflow an IV  */
-                            TARGi(NEGATE_2IV(product_low), 1);
-                            goto ret;
-                        } /* else drop to NVs below. */
-                    }
-                } /* product_middle too large */
-            } /* ahigh && bhigh */
-        } /* SvIOK(svl) */
-    } /* SvIOK(svr) */
+                UV uv_result;
+                if (!__builtin_mul_overflow(auv, biv, &uv_result)) {
+                    TARGu(uv_result, 1);
+                    goto ret;
+                }
+            }
+        }
+    }
 #endif
     {
       NV right = SvNV_nomg(svr);
