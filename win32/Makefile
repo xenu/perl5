@@ -456,7 +456,7 @@ EXTRACFLAGS	= $(EXTRACFLAGS) -MDd
 !ELSE
 # Enable Whole Program Optimizations (WPO) and Link Time Code Generation (LTCG).
 # -O1 yields smaller code, which turns out to be faster than -O2 on x86 and x64
-OPTIMIZE	= -O1 -Zi -GL
+OPTIMIZE	= -O1 -Zi -GL -fsanitize=address
 # we enable debug symbols in release builds also
 LINK_DBG	= -debug -opt:ref,icf -ltcg
 # you may want to enable this if you want COFF symbols in the executables
@@ -487,9 +487,9 @@ LIBBASEFILES	= \
 		version.lib odbc32.lib odbccp32.lib comctl32.lib
 
 !IF  "$(CFG)" == "DebugFull"
-LIBBASEFILES	= $(LIBBASEFILES) msvcrtd.lib vcruntimed.lib
+LIBBASEFILES	= $(LIBBASEFILES) msvcrtd.lib vcruntimed.lib legacy_stdio_definitions.lib legacy_stdio_wide_specifiers.lib vcasand.lib
 !ELSE
-LIBBASEFILES	= $(LIBBASEFILES) msvcrt.lib vcruntime.lib
+LIBBASEFILES	= $(LIBBASEFILES) msvcrt.lib vcruntime.lib legacy_stdio_definitions.lib legacy_stdio_wide_specifiers.lib vcasan.lib
 !ENDIF
 
 # Avoid __intel_new_proc_init link error for libircmt.
