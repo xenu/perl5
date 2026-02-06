@@ -1884,6 +1884,8 @@ win32_start_child(LPVOID arg)
     if (parent_message_hwnd != NULL)
         PostMessage(parent_message_hwnd, WM_USER_MESSAGE, w32_pseudo_id, (LPARAM)w32_message_hwnd);
 
+    thread_locale_init();
+
     /* push a zero on the stack (we are the child) */
     {
         dSP;
@@ -1959,6 +1961,7 @@ restart:
     }
 
     /* destroy everything (waits for any pseudo-forked children) */
+    thread_locale_term();
     win32_checkTLS(my_perl);
     perl_destruct(my_perl);
     win32_checkTLS(my_perl);
