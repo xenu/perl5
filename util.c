@@ -88,10 +88,6 @@ int putenv(char *);
  * XXX This advice seems to be widely ignored :-(   --AD  August 1996.
  */
 
-#if defined (DEBUGGING) || defined(PERL_IMPLICIT_SYS) || defined (PERL_TRACK_MEMPOOL)
-#  define ALWAYS_NEED_THX
-#endif
-
 #if defined(PERL_TRACK_MEMPOOL) && defined(PERL_DEBUG_READONLY_COW)
 static void
 S_maybe_protect_rw(pTHX_ struct perl_memory_debug_header *header)
@@ -156,9 +152,7 @@ Perl_safesysmalloc(MEM_SIZE size)
 {
     PERL_ARGS_ASSERT_SAFESYSMALLOC;
 
-#ifdef ALWAYS_NEED_THX
-    dTHX;
-#endif
+    dTHXs;
     Malloc_t ptr;
     dSAVEDERRNO;
 
@@ -223,9 +217,8 @@ Perl_safesysmalloc(MEM_SIZE size)
       out_of_memory:
 #endif
         {
-#ifndef ALWAYS_NEED_THX
             dTHX;
-#endif
+
             if (PL_nomemok)
                 ptr =  NULL;
             else
@@ -247,9 +240,7 @@ Perl_safesysrealloc(Malloc_t where,MEM_SIZE size)
 {
     PERL_ARGS_ASSERT_SAFESYSREALLOC;
 
-#ifdef ALWAYS_NEED_THX
-    dTHX;
-#endif
+    dTHXs;
     Malloc_t ptr;
 #ifdef PERL_DEBUG_READONLY_COW
     const MEM_SIZE oldsize = where
@@ -360,9 +351,8 @@ Perl_safesysrealloc(Malloc_t where,MEM_SIZE size)
           out_of_memory:
 #endif
             {
-#ifndef ALWAYS_NEED_THX
                 dTHX;
-#endif
+
                 if (PL_nomemok)
                     ptr = NULL;
                 else
@@ -385,9 +375,8 @@ Perl_safesysfree(Malloc_t where)
 {
     PERL_ARGS_ASSERT_SAFESYSFREE;
 
-#ifdef ALWAYS_NEED_THX
-    dTHX;
-#endif
+    dTHXs;
+
     DEBUG_m( PerlIO_printf(Perl_debug_log, "0x%" UVxf ": (%05ld) free\n",PTR2UV(where),(long)PL_an++));
     if (where) {
 #ifdef USE_MDH
@@ -458,9 +447,7 @@ Perl_safesyscalloc(MEM_SIZE count, MEM_SIZE size)
 {
     PERL_ARGS_ASSERT_SAFESYSCALLOC;
 
-#ifdef ALWAYS_NEED_THX
-    dTHX;
-#endif
+    dTHXs;
     Malloc_t ptr;
 #if defined(USE_MDH) || defined(DEBUGGING)
     MEM_SIZE total_size = 0;
@@ -537,9 +524,8 @@ Perl_safesyscalloc(MEM_SIZE count, MEM_SIZE size)
         return ptr;
     }
     else {
-#ifndef ALWAYS_NEED_THX
         dTHX;
-#endif
+
         if (PL_nomemok)
             return NULL;
         croak_no_mem_ext(STR_WITH_LEN("util:safesyscalloc"));
